@@ -1,0 +1,21 @@
+{{define "message"}}
+{{template "head" .}}
+<section class="card form-card">
+<h1>
+{{.Title}}
+</h1>
+{{if .Error}}
+<p class="error">
+{{.Error}}
+</p>
+<p class="muted">Вернитесь к форме и попробуйте ещё раз.</p>
+{{end}}
+{{if .Message}}
+<p>
+{{.Message}}
+</p>
+{{end}}
+<a href="/monitors">К мониторам →</a>
+</section>
+{{template "foot" .}}
+{{end}}

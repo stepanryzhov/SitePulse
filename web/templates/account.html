@@ -1,0 +1,34 @@
+{{define "account"}}
+{{template "head" .}}
+<section class="card form-card">
+<p class="eyebrow">Настройки</p>
+<h1>Аккаунт</h1>
+<p>
+<strong>
+{{.User.Email}}
+</strong>
+</p>
+{{if .Message}}
+<p class="notice">
+{{.Message}}
+</p>
+{{end}}
+{{if .User.VerifiedAt}}
+<p>
+<span class="badge up">Email подтверждён</span>
+</p>
+<p class="muted">Письма о сбоях и восстановлении включены.</p>
+{{else}}
+<p>
+<span class="badge unknown">Ожидает подтверждения</span>
+</p>
+<p>Откройте ссылку из письма. Она действует 24 часа.</p>
+<form action="/account/resend-verification" method="post">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<button type="submit">Отправить письмо повторно</button>
+</form>
+<p class="muted">Повторная отправка доступна раз в минуту.</p>
+{{end}}
+</section>
+{{template "foot" .}}
+{{end}}

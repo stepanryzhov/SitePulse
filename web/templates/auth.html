@@ -1,0 +1,39 @@
+{{define "login"}}
+{{template "head" .}}
+<section class="auth card">
+<p class="eyebrow">Добро пожаловать</p>
+<h1>Вход в SitePulse</h1>
+<p class="muted">Ваши сайты и их состояние в одном месте.</p>
+<form action="/login" method="post">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Email<input type="email" name="email" required maxlength="254" autocomplete="email">
+</label>
+<label>Пароль<input type="password" name="password" required minlength="10" maxlength="128" autocomplete="current-password">
+</label>
+<button type="submit">Войти</button>
+</form>
+<p>Нет аккаунта? <a href="/register">Зарегистрироваться</a>
+</p>
+</section>
+{{template "foot" .}}
+{{end}}
+{{define "register"}}
+{{template "head" .}}
+<section class="auth card">
+<p class="eyebrow">Мониторинг без лишнего</p>
+<h1>Создать аккаунт</h1>
+<p class="muted">Добавьте сайт. SitePulse сообщит о сбое и восстановлении.</p>
+<form action="/register" method="post">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Email<input type="email" name="email" required maxlength="254" autocomplete="email">
+</label>
+<label>Пароль<input type="password" name="password" required minlength="10" maxlength="128" autocomplete="new-password">
+</label>
+<p class="muted">От 10 до 128 байт. После регистрации мы отправим письмо подтверждения.</p>
+<button type="submit">Создать аккаунт</button>
+</form>
+<p>Уже зарегистрированы? <a href="/login">Войти</a>
+</p>
+</section>
+{{template "foot" .}}
+{{end}}

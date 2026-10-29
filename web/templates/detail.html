@@ -1,0 +1,167 @@
+{{define "detail"}}
+{{template "head" .}}
+<a href="/monitors">← Все мониторы</a>
+<div class="heading">
+<div>
+<h1>
+{{.Monitor.Name}}
+</h1>
+<p class="url">
+{{.Monitor.URL}}
+</p>
+</div>
+<span class="badge large {{status .Monitor}}">
+{{status .Monitor}}
+</span>
+</div>
+<div class="actions">
+<a class="button secondary" href="/monitors/{{.Monitor.ID}}/edit">Настройки</a>
+<form action="/monitors/{{.Monitor.ID}}/{{if .Monitor.Paused}}resume{{else}}pause{{end}}" method="post">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<button class="secondary" type="submit">
+{{if .Monitor.Paused}}Возобновить{{else}}Пауза{{end}}
+</button>
+</form>
+<form action="/monitors/{{.Monitor.ID}}/delete" method="post">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<button class="danger" type="submit">Удалить монитор</button>
+</form>
+</div>
+<div class="card settings">
+<span>Интервал <strong>
+{{.Monitor.Interval}} с</strong>
+</span>
+<span>Таймаут <strong>
+{{.Monitor.Timeout}} с</strong>
+</span>
+<span>Ожидаемый статус <strong>
+{{.Monitor.ExpectedStatus}}
+</strong>
+</span>
+<span>Последняя проверка <strong>
+{{stamp .Monitor.LastCheckedAt}}
+</strong>
+</span>
+</div>
+<div class="heading">
+<h2>Статистика</h2>
+<nav>
+<a href="?period=24h">24 часа</a>
+<a href="?period=7d">7 дней</a>
+<a href="?period=30d">30 дней</a>
+</nav>
+</div>
+<div class="stats">
+<div class="card">
+<small>Успешных проверок · {{.Stats.Period}}
+</small>
+<strong>
+{{number .Stats.Availability}}
+{{if .Stats.Availability}}%{{end}}
+</strong>
+</div>
+<div class="card">
+<small>Среднее время ответа</small>
+<strong>
+{{number .Stats.AverageMS}} ms</strong>
+</div>
+<div class="card">
+<small>Всего проверок</small>
+<strong>
+{{.Stats.Total}}
+</strong>
+</div>
+</div>
+<p class="muted">Доля успешных проверок — выборочная оценка доступности за период. N/A означает, что данных ещё нет.</p>
+<h2>История проверок</h2>
+<div class="table-wrap card">
+<table>
+<thead>
+<tr>
+<th>Время</th>
+<th>Результат</th>
+<th>HTTP</th>
+<th>Ответ</th>
+<th>Ошибка</th>
+</tr>
+</thead>
+<tbody>
+{{range .Checks}}
+<tr>
+<td>
+{{stamp .CheckedAt}}
+</td>
+<td>
+{{if .Success}}
+<span class="badge up">UP</span>
+{{else}}
+<span class="badge down">FAIL</span>
+{{end}}
+</td>
+<td>
+{{number .StatusCode}}
+</td>
+<td>
+{{.ResponseMS}} ms</td>
+<td>
+{{text .ErrorType}}
+</td>
+</tr>
+{{else}}
+<tr>
+<td colspan="5" class="muted">Проверок пока нет.</td>
+</tr>
+{{end}}
+</tbody>
+</table>
+</div>
+<h2>Инциденты</h2>
+<div class="table-wrap card">
+<table>
+<thead>
+<tr>
+<th>Начало</th>
+<th>Завершение</th>
+<th>Длительность</th>
+<th>Причина</th>
+</tr>
+</thead>
+<tbody>
+{{range .Incidents}}
+<tr>
+<td>
+{{stamp .StartedAt}}
+</td>
+<td>
+{{if .ResolvedAt}}
+{{stamp .ResolvedAt}}
+{{else}}
+<span class="badge down">Открыт</span>
+{{end}}
+</td>
+<td>
+{{.DurationSeconds}} с</td>
+<td>
+{{.Cause}}
+</td>
+</tr>
+{{else}}
+<tr>
+<td colspan="4" class="muted">Инцидентов пока нет.</td>
+</tr>
+{{end}}
+</tbody>
+</table>
+</div>
+<nav class="pagination">
+{{if gt .Page 1}}
+<a href="?period={{.Period}}&page={{.PreviousPage}}">← Назад</a>
+{{end}}
+<span>Страница {{.Page}}
+</span>
+{{if .NextPage}}
+<a href="?period={{.Period}}&page={{.NextPage}}">Далее →</a>
+{{end}}
+</nav>
+{{template "foot" .}}
+{{end}}

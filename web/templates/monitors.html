@@ -1,0 +1,64 @@
+{{define "monitors"}}
+{{template "head" .}}
+<div class="heading">
+<div>
+<p class="eyebrow">Обзор</p>
+<h1>Ваши мониторы</h1>
+<p class="muted">
+{{len .Monitors}} из 20 · Проверки выполняются автоматически</p>
+</div>
+<a class="button" href="/monitors/new">+ Добавить монитор</a>
+</div>
+{{if .Monitors}}
+<div class="table-wrap card">
+<table>
+<thead>
+<tr>
+<th>Монитор</th>
+<th>Состояние</th>
+<th>Последняя проверка</th>
+<th>Ответ</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+{{range .Monitors}}
+<tr>
+<td>
+<a class="strong" href="/monitors/{{.ID}}">
+{{.Name}}
+</a>
+<small class="url">
+{{.URL}}
+</small>
+</td>
+<td>
+<span class="badge {{status .}}">
+{{status .}}
+</span>
+</td>
+<td>
+{{stamp .LastCheckedAt}}
+</td>
+<td>
+{{number .LastResponseMS}} ms</td>
+<td>
+<a href="/monitors/{{.ID}}">Открыть →</a>
+</td>
+</tr>
+{{end}}
+</tbody>
+</table>
+</div>
+{{else}}
+<section class="card empty">
+<span class="empty-icon">◎</span>
+<h2>Начните с первого сайта</h2>
+<p class="muted">Добавьте публичный URL. Первая проверка начнётся в ближайшие секунды.</p>
+<a class="button" href="/monitors/new">Добавить монитор</a>
+</section>
+{{end}}
+<p class="muted">DOWN после 3 ошибок подряд · RECOVERED после 2 успешных проверок</p>
+{{template "foot" .}}
+{{end}}

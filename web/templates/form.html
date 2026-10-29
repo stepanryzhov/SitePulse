@@ -1,0 +1,18 @@
+{{define "form"}}
+{{template "head" .}}
+<a href="/monitors">← К мониторам</a>
+<section class="card form-card">
+<h1>
+{{.Title}}
+</h1>
+<form action="{{if .Monitor.ID}}/monitors/{{.Monitor.ID}}/edit{{else}}/monitors{{end}}" method="post">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+{{template "monitor-fields" .}}
+<div class="actions">
+<button type="submit">Сохранить</button>
+<a href="/monitors">Отмена</a>
+</div>
+</form>
+</section>
+{{template "foot" .}}
+{{end}}

@@ -1,0 +1,61 @@
+{{define "head"}}
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+{{.Title}} · SitePulse</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+<a class="brand" href="/monitors">
+<span class="pulse">●</span> SitePulse</a>
+<nav>
+{{if .User}}
+<a href="/monitors">Мониторы</a>
+<a href="/account">Аккаунт</a>
+<form action="/logout" method="post" class="inline">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<button class="link" type="submit">Выйти</button>
+</form>
+{{else}}
+<a href="/login">Войти</a>
+<a href="/register">Регистрация</a>
+{{end}}
+</nav>
+</header>
+<main>
+{{if .User}}
+{{if not .User.VerifiedAt}}
+<aside class="notice">Подтвердите email, чтобы получать уведомления. <a href="/account">Открыть аккаунт →</a>
+</aside>
+{{end}}
+{{end}}
+{{end}}
+{{define "foot"}}
+</main>
+<footer>SitePulse · Проверки публичных HTTP/HTTPS-сайтов · Время в UTC</footer>
+</body>
+</html>
+{{end}}
+{{define "monitor-fields"}}
+<label>Название<input name="name" maxlength="120" required value="{{.Input.Name}}" placeholder="Production API">
+</label>
+<label>URL<input type="url" name="url" maxlength="2048" required value="{{.Input.URL}}" placeholder="https://example.com/health">
+</label>
+<p class="muted">Только публичные HTTP/HTTPS-адреса на портах 80 и 443. Редиректы не выполняются.</p>
+<div class="fields">
+<label>Интервал<select name="interval_seconds">
+<option value="60" {{if eq .Input.Interval 60}}selected{{end}}>1 минута</option>
+<option value="300" {{if eq .Input.Interval 300}}selected{{end}}>5 минут</option>
+<option value="600" {{if eq .Input.Interval 600}}selected{{end}}>10 минут</option>
+</select>
+</label>
+<label>Таймаут, секунды<input name="timeout_seconds" type="number" min="1" max="15" required value="{{.Input.Timeout}}">
+</label>
+<label>Ожидаемый HTTP-код<input name="expected_status" type="number" min="100" max="599" required value="{{.Input.ExpectedStatus}}">
+</label>
+</div>
+{{end}}
